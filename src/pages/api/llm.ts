@@ -1,10 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import { generateRecipePrompt } from "@/prompt"
-import OpenAI from "openai"
-
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+import { generateText } from "ai"
+import { openai } from "@ai-sdk/openai"
 
 export function extractJsonFromResponse(
   responseText: string
@@ -35,13 +32,14 @@ export default async function handler(
   const prompt = generateRecipePrompt(filters, userQuery)
 
   try {
-    const response = await client.responses.create({
-      model: "gpt-4.1-nano",
-      input: prompt,
+    const { text } = await generateText({
+      model: openai("gpt-4.1-nano"),
+      prompt,
     })
 
-    res.status(200).json(extractJsonFromResponse(response.output_text))
+    res.status(200).json(extractJsonFromResponse(text))
   } catch (err) {
+    console.error(err)
     res.status(500).json({ error: (err as Error).message })
   }
 }
