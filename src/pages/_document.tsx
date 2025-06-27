@@ -1,6 +1,5 @@
 import { Html, Head, Main, NextScript } from "next/document";
 import { AppRoot } from "@telegram-apps/telegram-ui";
-import "@telegram-apps/telegram-ui/dist/styles.css";
 
 export default function Document() {
   return (
