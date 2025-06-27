@@ -227,6 +227,7 @@ function ResultStep({
   recipes,
   onBack,
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   recipes: any[];
   onBack: () => void;
 }) {
@@ -306,6 +307,7 @@ const FAKE_RECIPES = [
 
 export default function Home() {
   const [step, setStep] = useState<"form" | "loading" | "results">("form");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [recipes, setRecipes] = useState<any[]>([]);
 
   const handleFormSubmit = (filters: string[]) => {
