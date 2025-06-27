@@ -16,7 +16,7 @@ export default function Home() {
   const handleFormSubmit = (filters: string[], userQuery: string) => {
     setStep("loading")
     const fetchRecipes = async () => {
-      if (user) {
+      if (!user) {
         const response = await fetch("/api/llm", {
           method: "POST",
           body: JSON.stringify({ filters, userQuery }),
