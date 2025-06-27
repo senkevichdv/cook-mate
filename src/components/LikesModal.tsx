@@ -1,7 +1,8 @@
 import { useUser } from "@/context/UserContext"
 import { getLikes } from "@/lib/likesStorage"
-import { Button, List, Modal, Section, Text } from "@telegram-apps/telegram-ui"
+import { Button, List, Modal } from "@telegram-apps/telegram-ui"
 import RecipeComponent from "./Recipe"
+import LikeIcon from "./LikeIcon"
 
 const LikesModal = () => {
   const user = useUser()
@@ -13,18 +14,14 @@ const LikesModal = () => {
         header={<Modal.Header>Избранные рецепты</Modal.Header>}
         trigger={
           <Button mode="plain">
-            <Text style={{ fontSize: 24 }}>❤️</Text>
+            <LikeIcon liked={false} />
           </Button>
         }
       >
         <List>
-          <Section
-            header={<Section.Header large>Найденные рецепты</Section.Header>}
-          >
-            {likes.map((recipe, idx) => (
-              <RecipeComponent key={idx} recipe={recipe} idx={idx} />
-            ))}
-          </Section>
+          {likes.map((recipe, idx) => (
+            <RecipeComponent key={idx} recipe={recipe} idx={idx} />
+          ))}
         </List>
       </Modal>
     </div>

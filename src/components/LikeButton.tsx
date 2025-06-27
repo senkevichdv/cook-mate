@@ -1,8 +1,8 @@
 import { useUser } from "@/context/UserContext"
 import { addLike, removeLike, isLiked } from "@/lib/likesStorage"
 import { Recipe } from "@/models"
-import { Text } from "@telegram-apps/telegram-ui"
 import { useState } from "react"
+import LikeIcon from "./LikeIcon"
 
 const LikeButton = ({ recipe }: { recipe: Recipe }) => {
   const user = useUser()
@@ -21,11 +21,7 @@ const LikeButton = ({ recipe }: { recipe: Recipe }) => {
     setLikedState(!likedState)
   }
 
-  return (
-    <Text onClick={handleLike} style={{ cursor: "pointer" }}>
-      {liked ? "❤️" : "🤍"}
-    </Text>
-  )
+  return <LikeIcon liked={likedState} onClick={handleLike} />
 }
 
 export default LikeButton

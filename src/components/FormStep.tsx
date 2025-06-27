@@ -5,6 +5,7 @@ import { useState } from "react"
 import Image from "next/image"
 import { FILTER_OPTIONS } from "@/constants"
 import { useUser } from "@/context/UserContext"
+import LikesModal from "./LikesModal"
 
 interface FormStepProps {
   onSubmit: (filters: string[], userQuery: string) => void
@@ -28,6 +29,7 @@ const FormStep = ({ onSubmit }: FormStepProps) => {
       transition={{ duration: 0.3 }}
       style={{ width: "100%" }}
     >
+      <LikesModal />
       <Placeholder
         action={
           <Button size="l" stretched onClick={submitHandler}>

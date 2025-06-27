@@ -7,7 +7,6 @@ import ResultsStep from "@/components/ResultsStep"
 import FormStep from "@/components/FormStep"
 import LoadingStep from "@/components/LoadingStep"
 import { useUser } from "@/context/UserContext"
-import LikesModal from "@/components/LikesModal"
 
 export default function Home() {
   const [step, setStep] = useState<"form" | "loading" | "results">("form")
@@ -57,7 +56,6 @@ export default function Home() {
 
   return (
     <AnimatePresence mode="wait">
-      <LikesModal />
       {step === "form" && <FormStep key="form" onSubmit={handleFormSubmit} />}
       {step === "loading" && <LoadingStep />}
       {step === "results" && (
