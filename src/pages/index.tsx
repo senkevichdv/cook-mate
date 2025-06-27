@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Image from "next/image";
 import {
   Button,
@@ -25,22 +25,21 @@ export interface Recipe {
 }
 
 const FILTER_OPTIONS = [
-  "курица",
-  "говядина",
-  "рыба",
-  "овощи",
-  "быстро",
-  "среднее",
-  "сложное",
-  "веган",
-  "вегетарианец",
-  "ПП",
-  "нет",
-  "горячее",
-  "легкое",
-  "острое",
-  "сладкое",
-  "не важно",
+  "Без мяса",
+  "Без рыбы и морепродуктов",
+  "Без молочных продуктов",
+  "Без яиц",
+  "Без глютена",
+  "Без сладкого",
+  "Только простые блюда",
+  "Готовка до 15 минут",
+  "Подходит для завтрака",
+  "Подходит для обеда",
+  "Подходит для ужина",
+  "Можно приготовить заранее",
+  "Только из свежих продуктов",
+  "Что-то к чаю",
+  "Постное блюдо",
 ];
 
 function FormStep({
@@ -49,6 +48,9 @@ function FormStep({
   onSubmit: (filters: string[]) => void;
 }) {
   const [filters, setFilters] = useState<string[]>([]);
+  const submitHandler = useCallback(() => {
+    onSubmit(filters);
+  }, [filters]);
 
   return (
     <motion.div
@@ -61,7 +63,7 @@ function FormStep({
     >
       <Placeholder
         action={
-          <Button size="l" stretched onClick={() => onSubmit(filters)}>
+          <Button size="l" stretched onClick={submitHandler}>
             Найти рецепт
           </Button>
         }
@@ -202,12 +204,28 @@ export default function Home() {
 
   const handleFormSubmit = (filters: string[]) => {
     setStep("loading");
-    console.log(filters);
-    // Simulate API call
-    setTimeout(() => {
-      setRecipes(FAKE_RECIPES);
+    // console.log(filters);
+    const fetchRecipes = async () => {
+      const response = await fetch("/api/llm", {
+        method: "POST",
+        body: JSON.stringify({ filters }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      console.log(data);
+      setRecipes(data);
       setStep("results");
-    }, 1800);
+    };
+    fetchRecipes();
+    // // Simulate API call
+    // setTimeout(() => {
+    //   const prompt = generateRecipePrompt(filters);
+    //   console.log(prompt);
+    //   setRecipes(FAKE_RECIPES);
+    //   setStep("results");
+    // }, 1800);
   };
 
   const handleBack = () => {
