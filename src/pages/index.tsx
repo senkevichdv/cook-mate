@@ -6,24 +6,45 @@ import { Recipe } from "@/models"
 import ResultsStep from "@/components/ResultsStep"
 import FormStep from "@/components/FormStep"
 import LoadingStep from "@/components/LoadingStep"
+import { useUser } from "@/context/UserContext"
+import LikesModal from "@/components/LikesModal"
 
 export default function Home() {
   const [step, setStep] = useState<"form" | "loading" | "results">("form")
   const [recipes, setRecipes] = useState<Recipe[]>([])
+  const user = useUser()
 
   const handleFormSubmit = (filters: string[], userQuery: string) => {
     setStep("loading")
     const fetchRecipes = async () => {
-      const response = await fetch("/api/llm", {
-        method: "POST",
-        body: JSON.stringify({ filters, userQuery }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      const data = await response.json()
-      console.log(data)
-      setRecipes(data)
+      if (user) {
+        const response = await fetch("/api/llm", {
+          method: "POST",
+          body: JSON.stringify({ filters, userQuery }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+
+        const data = await response.json()
+        setRecipes(data)
+      } else {
+        setRecipes([
+          {
+            title: "Название блюда",
+            cookingTime: "примерное время (например: 20 минут)",
+            ingredients: ["Куриное филе — 300 г", "Картофель — 4 штуки"],
+            steps: [
+              "Нарежьте куриное филе кубиками по 2 см.",
+              "Разогрейте сковороду на среднем огне...",
+            ],
+            tips: [
+              "Можно посыпать блюдо тёртым сыром за 5 минут до конца.",
+              "Добавьте базилик для аромата, если есть.",
+            ],
+          },
+        ])
+      }
       setStep("results")
     }
     fetchRecipes()
@@ -36,6 +57,7 @@ export default function Home() {
 
   return (
     <AnimatePresence mode="wait">
+      <LikesModal />
       {step === "form" && <FormStep key="form" onSubmit={handleFormSubmit} />}
       {step === "loading" && <LoadingStep />}
       {step === "results" && (

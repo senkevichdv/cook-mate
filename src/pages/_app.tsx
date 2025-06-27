@@ -5,6 +5,7 @@ import type { AppProps } from 'next/app'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import Script from "next/script"
 import { CssBaseline } from "@mui/material"
+import { UserProvider } from "@/context/UserContext"
 
 declare global {
   interface Window {
@@ -18,6 +19,9 @@ declare global {
     };
     TelegramGameProxy?: {
       receiveEvent?: (...args: unknown[]) => void;
+    };
+    TelegramWebviewProxy?: {
+      postEvent?: (event: string, data: string) => void;
     };
   }
 }
@@ -62,6 +66,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <ThemeProvider theme={theme}>
+      <UserProvider>
       <AppRoot>
         <Script
           id="TelegramWebApp"
@@ -76,19 +81,19 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
               tg.onEvent("themeChanged", handler)
             }
-            // This place could be used for telegram-sdk specific logic
-            // window.Telegram.WebApp.MainButton.setParams({
-            //   text: `Hello`,
-            //   is_visible: true,
-            // });
-            // window.Telegram.WebApp.MainButton.onClick(() => {
-            //   window.Telegram.WebApp.showAlert("Hello");
-            // });
+
+            if (window.TelegramWebviewProxy?.postEvent) {
+              window.TelegramWebviewProxy.postEvent(
+                "web_app_setup_closing_behavior",
+                JSON.stringify({ need_confirmation: true })
+              )
+            }
           }}
         />
         <CssBaseline />
-        <Component {...pageProps} />
-      </AppRoot>
+          <Component {...pageProps} />
+        </AppRoot>
+      </UserProvider>
     </ThemeProvider>
   )
 }

@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import { useState } from "react"
 import Image from "next/image"
 import { FILTER_OPTIONS } from "@/constants"
+import { useUser } from "@/context/UserContext"
 
 interface FormStepProps {
   onSubmit: (filters: string[], userQuery: string) => void
@@ -12,6 +13,7 @@ interface FormStepProps {
 const FormStep = ({ onSubmit }: FormStepProps) => {
   const [filters, setFilters] = useState<string[]>([])
   const [userQuery, setUserQuery] = useState<string>("")
+  const user = useUser()
 
   const submitHandler = () => {
     onSubmit(filters, userQuery)
@@ -32,7 +34,8 @@ const FormStep = ({ onSubmit }: FormStepProps) => {
             Найти рецепт
           </Button>
         }
-        description="Выберите параметры для поиска рецепта"
+        description="Выбери параметры для поиска рецепта"
+        header={`Привет, ${user?.firstName || "друг"}!`}
       >
         <Image
           width={250}
