@@ -16,6 +16,14 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import { MenuItem, Select, FormControl, InputLabel } from '@mui/material'
 
+export interface Recipe {
+  title: string; // Название блюда
+  cookingTime: string; // Пример: "30 минут", "15–20 минут"
+  ingredients: string[]; // Список ингредиентов, как строки
+  steps: string[]; // Пошаговая инструкция, каждый шаг отдельной строкой
+  tips?: string[]; // Советы, не обязательное поле
+}
+
 const FILTER_OPTIONS = [
   "курица",
   "говядина",
@@ -41,12 +49,6 @@ function FormStep({
   onSubmit: (filters: string[]) => void;
 }) {
   const [filters, setFilters] = useState<string[]>([]);
-
-  // const [cookingTime, setCookingTime] = useState<'15' | '30' | 'неважно'>("15");
-  // const [type, setType] = useState<'курица' | 'говядина' | 'рыба' | 'овощи' | 'неважно'>("курица");
-  // const [complexity, setComplexity] = useState<'просто' | 'среднее' | 'сложное' | 'неважно'>("просто");
-  // const [diet, setDiet] = useState<'веган' | 'вегетарианец' | 'ПП' | 'нет' | 'неважно'>("веган");
-  // const [mood, setMood] = useState<'горячее' | 'легкое' | 'острое' | 'сладкое' | 'не важно'>("горячее");
 
   return (
     <motion.div
@@ -96,128 +98,6 @@ function FormStep({
           </Select>
         </FormControl>
       </Placeholder>
-      {/* <List>
-        <Select
-          header="Время готовки"
-          value={cookingTime}
-          onChange={(e) =>
-            setCookingTime(e.target.value as "15" | "30" | "неважно")
-          }
-        >
-          <option>15</option>
-          <option>30</option>
-          <option>Неважно</option>
-        </Select>
-        <Select
-          header="Тип"
-          value={type}
-          onChange={(e) =>
-            setType(
-              e.target.value as
-                | "курица"
-                | "говядина"
-                | "рыба"
-                | "овощи"
-                | "неважно"
-            )
-          }
-        >
-          <option>Курица</option>
-          <option>Говядина</option>
-          <option>Рыба</option>
-          <option>Овощи</option>
-          <option>Не важно</option>
-        </Select>
-        <Select
-          header="Сложность"
-          value={complexity}
-          onChange={(e) =>
-            setComplexity(
-              e.target.value as "просто" | "среднее" | "сложное" | "неважно"
-            )
-          }
-        >
-          <option>Просто</option>
-          <option>Среднее</option>
-          <option>Сложное</option>
-          <option>Не важно</option>
-        </Select>
-        <Select
-          header="Диета"
-          value={diet}
-          onChange={(e) =>
-            setDiet(
-              e.target.value as
-                | "веган"
-                | "вегетарианец"
-                | "ПП"
-                | "нет"
-                | "неважно"
-            )
-          }
-        >
-          <option>Веган</option>
-          <option>Вегетарианец</option>
-          <option>ПП</option>
-          <option>Нет</option>
-          <option>Не важно</option>
-        </Select>
-        <Select
-          header="Настроение"
-          value={mood}
-          onChange={(e) =>
-            setMood(
-              e.target.value as
-                | "горячее"
-                | "легкое"
-                | "острое"
-                | "сладкое"
-                | "не важно"
-            )
-          }
-        >
-          <option>Горячее</option>
-          <option>Легкое</option>
-          <option>Острое</option>
-          <option>Сладкое</option>
-          <option>Не важно</option>
-        </Select>
-      </List> */}
-      {/* <div style={{ padding: 16, textAlign: "center" }}>
-        <Button
-          size="l"
-          mode="bezeled"
-          onClick={() =>
-            onSubmit({ cookingTime, type, complexity, diet, mood })
-          }
-        >
-          Найти рецепт
-        </Button>
-      </div> */}
-    </motion.div>
-  );
-}
-
-// --- Step 2: LoadingStep ---
-function LoadingStep() {
-  return (
-    <motion.div
-      key="loading"
-      initial={{ y: 40, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      exit={{ y: -40, opacity: 0 }}
-      transition={{ duration: 0.3 }}
-      style={{
-        width: "100%",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: 300,
-      }}
-    >
-      <Spinner size="l" />
-      <div style={{ marginTop: 16, fontSize: 18 }}>Ищем рецепт…</div>
     </motion.div>
   );
 }
@@ -249,7 +129,9 @@ function ResultStep({
               key={idx}
               expanded={expanded === idx}
             >
-              <Accordion.Summary>{recipe.name}</Accordion.Summary>
+              <Accordion.Summary>
+                <Text weight="3">{recipe.title} ({recipe.cookingTime})</Text>
+              </Accordion.Summary>
               <Accordion.Content>
                 <Subheadline
                   level="2"
@@ -257,20 +139,26 @@ function ResultStep({
                     padding: "12px 24px 24px",
                   }}
                 >
-                  <Text weight="3">Ингредиенты:</Text>
-                  <ul style={{ margin: 0, paddingLeft: 18 }}>
-                    {recipe.ingredients.map((ing: string, i: number) => (
-                      <li key={i}>{ing}</li>
-                    ))}
-                  </ul>
-                  <div style={{ margin: "8px 0 4px", fontWeight: 500 }}>
-                    Steps:
-                  </div>
-                  <ol style={{ margin: 0, paddingLeft: 18 }}>
-                    {recipe.steps.map((step: string, i: number) => (
-                      <li key={i}>{step}</li>
-                    ))}
-                  </ol>
+                  <List>
+                    <Text weight="3">Ингредиенты:</Text>
+                    <ul style={{ margin: 0, paddingLeft: 18, marginBottom: 16 }}>
+                      {recipe.ingredients.map((ing: string, i: number) => (
+                        <li key={i}>{ing}</li>
+                      ))}
+                    </ul>
+                    <Text weight="3">Шаги:</Text>
+                    <ol style={{ margin: 0, paddingLeft: 18, marginBottom: 16 }}>
+                      {recipe.steps.map((step: string, i: number) => (
+                        <li key={i}>{step}</li>
+                      ))}
+                    </ol>
+                    {recipe.tips?.length && <Text weight="3">Советы:</Text>}
+                    <ul style={{ margin: 0, paddingLeft: 18, marginBottom: 16 }}>
+                      {recipe.tips?.map((tip: string, i: number) => (
+                        <li key={i}>{tip}</li>
+                      ))}
+                    </ul>
+                  </List>
                 </Subheadline>
               </Accordion.Content>
             </Accordion>
@@ -278,30 +166,32 @@ function ResultStep({
         </Section>
       </List>
       <div style={{ padding: 16, textAlign: "center" }}>
-        <Button size="l" mode="bezeled" onClick={onBack}>
-          Back
+        <Button size="l" mode="gray" onClick={onBack}>
+          Назад к поиску
         </Button>
       </div>
     </motion.div>
   );
 }
 
-// --- Main Page ---
-const FAKE_RECIPES = [
+const FAKE_RECIPES: Recipe[] = [
   {
-    name: "Spaghetti Carbonara",
-    ingredients: ["Spaghetti", "Eggs", "Pancetta", "Parmesan", "Pepper"],
-    steps: ["Boil pasta", "Fry pancetta", "Mix eggs and cheese", "Combine all"],
-  },
-  {
-    name: "Vegetarian Sushi",
-    ingredients: ["Rice", "Nori", "Cucumber", "Avocado", "Carrot"],
-    steps: ["Cook rice", "Prepare veggies", "Roll sushi", "Slice and serve"],
-  },
-  {
-    name: "Chicken Tacos",
-    ingredients: ["Tortillas", "Chicken", "Lettuce", "Cheese", "Salsa"],
-    steps: ["Cook chicken", "Warm tortillas", "Assemble tacos"],
+    title: "Курица в сметане с картофелем",
+    cookingTime: "40 минут",
+    ingredients: [
+      "куриное филе — 300 г",
+      "картофель — 4 шт.",
+      "сметана — 3 ст. ложки",
+      "чеснок — 2 зубчика",
+      "соль, перец — по вкусу",
+    ],
+    steps: [
+      "Очистите и нарежьте картофель кружками.",
+      "Нарежьте куриное филе кусочками, посолите и поперчите.",
+      "Выложите в форму слоями: картофель, курицу, сметану с чесноком.",
+      "Запекайте при 180°C около 35–40 минут до румяной корочки.",
+    ],
+    tips: ["Можно добавить немного сыра сверху перед запеканием."],
   },
 ];
 
@@ -327,10 +217,27 @@ export default function Home() {
 
   return (
     <AnimatePresence mode="wait">
-      {step === "form" && (
-        <FormStep key="form" onSubmit={handleFormSubmit} />
+      {step === "form" && <FormStep key="form" onSubmit={handleFormSubmit} />}
+      {step === "loading" && (
+        <motion.div
+          key="loading"
+          initial={{ y: 40, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: -40, opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          style={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: 300,
+          }}
+        >
+          <Spinner size="l" />
+          <div style={{ marginTop: 16, fontSize: 18 }}>Ищем рецепт…</div>
+        </motion.div>
       )}
-      {step === "loading" && <LoadingStep key="loading" />}
       {step === "results" && (
         <ResultStep key="results" recipes={recipes} onBack={handleBack} />
       )}
