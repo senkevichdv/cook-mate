@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { generateRecipePrompt } from '../prompt';
+import { generateRecipePrompt } from '../../prompt';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function extractJsonFromResponse(responseText: string): any | null {
