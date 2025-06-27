@@ -42,7 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       {
         method: "POST",
         headers: {
-          Authorization: `Bearer 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`,
+          Authorization: `Bearer ${process.env.LLM_API_KEY}`,
           "Content-Type": "application/json",
           "HTTP-Referer": "https://cook-mate-cyan.vercel.app/", // or your domain
           "X-Title": "CookMate",
