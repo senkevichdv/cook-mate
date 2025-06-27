@@ -7,7 +7,6 @@ import React, {
   useState,
   ReactNode,
 } from "react"
-import { retrieveLaunchParams } from "@telegram-apps/sdk"
 
 interface UserInfo {
   id: string | null
@@ -26,12 +25,12 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     try {
-      const { tgWebAppData } = retrieveLaunchParams()
-      if (tgWebAppData?.user) {
+      const tgUser = window.Telegram?.WebAppUser
+      if (tgUser) {
         setUser({
-          id: tgWebAppData?.user.id.toString(),
-          firstName: tgWebAppData?.user.first_name,
-          username: tgWebAppData?.user.username,
+          id: tgUser.id.toString(),
+          firstName: tgUser.first_name,
+          username: tgUser.username,
         })
       } else {
         setUser(null)

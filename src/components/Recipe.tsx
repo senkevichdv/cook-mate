@@ -1,4 +1,5 @@
-import { Accordion, List, Subheadline, Text } from "@telegram-apps/telegram-ui"
+import { Accordion, AccordionSummary, AccordionDetails, List, ListItem, Typography, Box } from '@mui/material'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { useState } from "react"
 import LikeButton from "./LikeButton"
 import { Recipe } from "@/models"
@@ -15,45 +16,46 @@ const RecipeComponent = ({ recipe, idx }: RecipeComponentProps) => {
       onChange={() => setExpanded(expanded === idx ? null : idx)}
       key={idx}
       expanded={expanded === idx}
+      sx={{
+        width: "100%",
+      }}
     >
-      <Accordion.Summary>
-        <Text weight="3">
-          {recipe.title} ({recipe.cookingTime})
-        </Text>
-      </Accordion.Summary>
-      <Accordion.Content>
-        <Subheadline
-          level="2"
-          style={{
-            padding: "12px 24px 24px",
-            position: "relative",
-          }}
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <Typography
+          variant="h6"
+          sx={{ display: "flex", alignItems: "center", gap: 1 }}
         >
-          <div style={{ position: "absolute", right: 36, top: 12 }}>
-            <LikeButton recipe={recipe} />
-          </div>
+          {recipe.title} ({recipe.cookingTime}) <LikeButton recipe={recipe} />
+        </Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Box mb={1}>
+          <Typography variant="subtitle1">Ингредиенты:</Typography>
           <List>
-            <Text weight="3">Ингредиенты:</Text>
-            <ul style={{ margin: 0, paddingLeft: 18, marginBottom: 16 }}>
-              {recipe.ingredients.map((ing: string, i: number) => (
-                <li key={i}>{ing}</li>
-              ))}
-            </ul>
-            <Text weight="3">Шаги:</Text>
-            <ol style={{ margin: 0, paddingLeft: 18, marginBottom: 16 }}>
-              {recipe.steps.map((step: string, i: number) => (
-                <li key={i}>{step}</li>
-              ))}
-            </ol>
-            {recipe.tips?.length && <Text weight="3">Советы:</Text>}
-            <ul style={{ margin: 0, paddingLeft: 18, marginBottom: 16 }}>
-              {recipe.tips?.map((tip: string, i: number) => (
-                <li key={i}>{tip}</li>
-              ))}
-            </ul>
+            {recipe.ingredients.map((ing: string, i: number) => (
+              <ListItem key={i}>{ing}</ListItem>
+            ))}
           </List>
-        </Subheadline>
-      </Accordion.Content>
+        </Box>
+        <Box>
+          <Typography variant="subtitle1">Шаги:</Typography>
+          <List>
+            {recipe.steps.map((step: string, i: number) => (
+              <ListItem key={i}>{step}</ListItem>
+            ))}
+          </List>
+        </Box>
+        {recipe.tips?.length && (
+          <Box mt={2}>
+            <Typography variant="subtitle1">Советы:</Typography>
+            <List>
+              {recipe.tips?.map((tip: string, i: number) => (
+                <ListItem key={i}>{tip}</ListItem>
+              ))}
+            </List>
+          </Box>
+        )}
+      </AccordionDetails>
     </Accordion>
   )
 }

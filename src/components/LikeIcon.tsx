@@ -1,6 +1,6 @@
 interface LikeIconProps {
   liked: boolean
-  onClick?: () => void
+  onClick?: (e: React.MouseEvent<SVGSVGElement>) => void
 }
 
 const LikeIcon = ({ liked, onClick }: LikeIconProps) => {

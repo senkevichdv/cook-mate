@@ -1,7 +1,3 @@
-"use client"
-
-import { AppRoot } from "@telegram-apps/telegram-ui"
-import "@telegram-apps/telegram-ui/dist/styles.css"
 import { useEffect, useMemo, useState } from "react"
 import type { AppProps } from "next/app"
 import { ThemeProvider, createTheme } from "@mui/material/styles"
@@ -17,6 +13,11 @@ declare global {
         themeParams?: Record<string, string>
         onEvent?: (event: string, handler: () => void) => void
         offEvent?: (event: string, handler: () => void) => void
+      }
+      WebAppUser?: {
+        id: string
+        first_name: string
+        username: string
       }
     }
     TelegramGameProxy?: {
@@ -71,35 +72,33 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const theme = useMemo(() => getMuiTheme(mode, tgTheme), [mode, tgTheme])
 
   return (
-    <AppRoot>
-      <ThemeProvider theme={theme}>
-        <UserProvider>
-          <Script
-            id="TelegramWebApp"
-            src="https://telegram.org/js/telegram-web-app.js"
-            onReady={() => {
-              const tg = window.Telegram?.WebApp
-              if (tg && tg.onEvent) {
-                const handler = () => {
-                  setMode(tg.colorScheme || "light")
-                  setTgTheme(tg.themeParams)
-                }
-
-                tg.onEvent("themeChanged", handler)
+    <ThemeProvider theme={theme}>
+      <UserProvider>
+        <Script
+          id="TelegramWebApp"
+          src="https://telegram.org/js/telegram-web-app.js"
+          onReady={() => {
+            const tg = window.Telegram?.WebApp
+            if (tg && tg.onEvent) {
+              const handler = () => {
+                setMode(tg.colorScheme || "light")
+                setTgTheme(tg.themeParams)
               }
 
-              if (window.TelegramWebviewProxy?.postEvent) {
-                window.TelegramWebviewProxy.postEvent(
-                  "web_app_setup_closing_behavior",
-                  JSON.stringify({ need_confirmation: true })
-                )
-              }
-            }}
-          />
-          <CssBaseline />
-          <Component {...pageProps} />
-        </UserProvider>
-      </ThemeProvider>
-    </AppRoot>
+              tg.onEvent("themeChanged", handler)
+            }
+
+            if (window.TelegramWebviewProxy?.postEvent) {
+              window.TelegramWebviewProxy.postEvent(
+                "web_app_setup_closing_behavior",
+                JSON.stringify({ need_confirmation: true })
+              )
+            }
+          }}
+        />
+        <CssBaseline />
+        <Component {...pageProps} />
+      </UserProvider>
+    </ThemeProvider>
   )
 }

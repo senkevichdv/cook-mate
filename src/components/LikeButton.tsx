@@ -11,7 +11,8 @@ const LikeButton = ({ recipe }: { recipe: Recipe }) => {
   const liked = userId ? isLiked(userId, recipe.title) : false
   const [likedState, setLikedState] = useState(liked)
 
-  const handleLike = () => {
+  const handleLike = (e: React.MouseEvent<SVGSVGElement>) => {
+    e.stopPropagation()
     if (!userId) return
     if (likedState) {
       removeLike(userId, recipe.title)

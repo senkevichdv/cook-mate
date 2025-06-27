@@ -1,8 +1,7 @@
-import { Button, List, Section } from "@telegram-apps/telegram-ui"
-
 import { Recipe } from "@/models"
 import { motion } from "framer-motion"
 import RecipeComponent from "./Recipe"
+import { Box, Button, List, ListItem, Typography } from "@mui/material"
 
 interface ResultsStepProps {
   recipes: Recipe[]
@@ -19,18 +18,34 @@ const ResultsStep = ({ recipes, onBack }: ResultsStepProps) => {
       transition={{ duration: 0.3 }}
       style={{ width: "100%" }}
     >
-      <List>
-        <Section header={<Section.Header large>Найденные рецепты</Section.Header>}>
+      <Box
+        sx={{
+          p: 2,
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          alignItems: "center",
+        }}
+      >
+        <List sx={{ width: "100%", display: "flex", flexDirection: "column" }}>
+          <Typography sx={{ ml: 2 }} variant="h6">
+            Найденные рецепты
+          </Typography>
           {recipes.map((recipe, idx) => (
-            <RecipeComponent key={idx} recipe={recipe} idx={idx} />
+            <ListItem key={idx} sx={{ width: "100%" }}>
+              <RecipeComponent key={idx} recipe={recipe} idx={idx} />
+            </ListItem>
           ))}
-        </Section>
-      </List>
-      <div style={{ padding: 16, textAlign: "center" }}>
-        <Button size="l" mode="gray" onClick={onBack}>
+        </List>
+        <Button
+          size="large"
+          variant="contained"
+          color="primary"
+          onClick={onBack}
+        >
           Назад к поиску
         </Button>
-      </div>
+      </Box>
     </motion.div>
   )
 }

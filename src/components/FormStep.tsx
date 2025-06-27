@@ -1,11 +1,23 @@
-import { Checkbox, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material"
-import { Button, Placeholder, Text } from "@telegram-apps/telegram-ui"
+import {
+  Checkbox,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Button,
+  Typography,
+  Box,
+  IconButton,
+} from "@mui/material"
 import { motion } from "framer-motion"
 import { useState } from "react"
 import Image from "next/image"
 import { FILTER_OPTIONS } from "@/constants"
 import { useUser } from "@/context/UserContext"
 import LikesModal from "./LikesModal"
+import LikeIcon from "./LikeIcon"
+import { getLikes } from "@/lib/likesStorage"
 
 interface FormStepProps {
   onSubmit: (filters: string[], userQuery: string) => void
@@ -14,7 +26,9 @@ interface FormStepProps {
 const FormStep = ({ onSubmit }: FormStepProps) => {
   const [filters, setFilters] = useState<string[]>([])
   const [userQuery, setUserQuery] = useState<string>("")
+  const [likesModalOpen, setLikesModalOpen] = useState<boolean>(false)
   const user = useUser()
+  const likes = user?.id ? getLikes(user.id) : []
 
   const submitHandler = () => {
     onSubmit(filters, userQuery)
@@ -29,15 +43,26 @@ const FormStep = ({ onSubmit }: FormStepProps) => {
       transition={{ duration: 0.3 }}
       style={{ width: "100%" }}
     >
-      <LikesModal />
-      <Placeholder
-        action={
-          <Button size="l" stretched onClick={submitHandler}>
-            Найти рецепт
-          </Button>
-        }
-        description="Выбери параметры для поиска рецепта"
-        header={`Привет, ${user?.firstName || "друг"}!`}
+      {likes.length > 0 && (
+        <IconButton
+          sx={{ position: "absolute", top: 8, right: 8 }}
+          onClick={() => setLikesModalOpen(true)}
+        >
+          <LikeIcon liked={false} />
+        </IconButton>
+      )}
+      <LikesModal
+        open={likesModalOpen}
+        onClose={() => setLikesModalOpen(false)}
+      />
+      <Box
+        sx={{
+          p: 2,
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          alignItems: "center",
+        }}
       >
         <Image
           width={250}
@@ -45,6 +70,12 @@ const FormStep = ({ onSubmit }: FormStepProps) => {
           alt="Telegram sticker"
           src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExY21ubDMyc3B6cTU4cW1nZG00OG9zNXJ6eTYyM3Jwd3FxbHpiazltMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/rkgX9MTBXJa1O/giphy.gif"
         />
+        <Typography variant="h6">
+          Привет, {user?.firstName || "друг"}!
+        </Typography>
+        <Typography variant="body1">
+          Выбери параметры для поиска рецепта
+        </Typography>
         <FormControl fullWidth>
           <InputLabel id="filters-label">Фильтры</InputLabel>
           <Select
@@ -63,7 +94,7 @@ const FormStep = ({ onSubmit }: FormStepProps) => {
             {FILTER_OPTIONS.map((name) => (
               <MenuItem key={name} value={name}>
                 <Checkbox checked={filters.indexOf(name) > -1} />
-                <Text style={{ marginLeft: 8 }}>{name}</Text>
+                <Typography style={{ marginLeft: 8 }}>{name}</Typography>
               </MenuItem>
             ))}
           </Select>
@@ -74,7 +105,15 @@ const FormStep = ({ onSubmit }: FormStepProps) => {
           value={userQuery}
           onChange={(e) => setUserQuery(e.target.value)}
         />
-      </Placeholder>
+        <Button
+          variant="contained"
+          color="primary"
+          fullWidth
+          onClick={submitHandler}
+        >
+          Найти рецепт
+        </Button>
+      </Box>
     </motion.div>
   )
 }

@@ -1,29 +1,34 @@
 import { useUser } from "@/context/UserContext"
 import { getLikes } from "@/lib/likesStorage"
-import { Button, List, Modal } from "@telegram-apps/telegram-ui"
+import { Button, Dialog, DialogTitle, DialogContent, List, ListItem } from '@mui/material'
 import RecipeComponent from "./Recipe"
-import LikeIcon from "./LikeIcon"
 
-const LikesModal = () => {
+interface LikesModalProps {
+  open: boolean
+  onClose: () => void
+}
+
+const LikesModal = ({ open, onClose }: LikesModalProps) => {
   const user = useUser()
   const userId = user?.id
   const likes = userId ? getLikes(userId) : []
   return (
     <div style={{ position: "fixed", top: 8, right: 8 }}>
-      <Modal
-        header={<Modal.Header>Избранные рецепты</Modal.Header>}
-        trigger={
-          <Button mode="plain">
-            <LikeIcon liked={false} />
+      <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+        <DialogTitle>Избранные рецепты</DialogTitle>
+        <DialogContent>
+          <List>
+            {likes.map((recipe, idx) => (
+              <ListItem key={idx}>
+                <RecipeComponent recipe={recipe} idx={idx} />
+              </ListItem>
+            ))}
+          </List>
+          <Button onClick={onClose} variant="outlined" fullWidth sx={{ mt: 2 }}>
+            Закрыть
           </Button>
-        }
-      >
-        <List>
-          {likes.map((recipe, idx) => (
-            <RecipeComponent key={idx} recipe={recipe} idx={idx} />
-          ))}
-        </List>
-      </Modal>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

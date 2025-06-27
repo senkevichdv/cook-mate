@@ -1,5 +1,5 @@
-import { Spinner, Text } from "@telegram-apps/telegram-ui"
 import { motion } from "framer-motion"
+import { Box, CircularProgress, Typography } from "@mui/material"
 
 const LoadingStep = () => (
   <motion.div
@@ -17,8 +17,28 @@ const LoadingStep = () => (
       minHeight: 300,
     }}
   >
-    <Spinner size="l" />
-    <Text weight="3" style={{ marginTop: 16 }}>Исследуем кулинарную книгу</Text>
+    <Box
+      sx={{
+        p: 2,
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+        alignItems: "center",
+      }}
+    >
+      <CircularProgress
+        size="large"
+        color="primary"
+        variant="indeterminate"
+        sx={{
+          height: 50,
+          width: 50,
+        }}
+      />
+      <Typography style={{ marginTop: 16 }}>
+        Исследуем кулинарную книгу
+      </Typography>
+    </Box>
   </motion.div>
 )
 
