@@ -1,5 +1,5 @@
-import { Html, Head, Main, NextScript } from "next/document";
-import { AppRoot } from "@telegram-apps/telegram-ui";
+import { Html, Head, Main, NextScript } from "next/document"
+import { AppRoot } from "@telegram-apps/telegram-ui"
 
 export default function Document() {
   return (
@@ -12,5 +12,5 @@ export default function Document() {
         </body>
       </AppRoot>
     </Html>
-  );
+  )
 }
