@@ -37,7 +37,7 @@ export function getMuiTheme(
       MuiButton: {
         styleOverrides: {
           root: {
-            height: 40,
+            height: 56,
           },
         },
       },

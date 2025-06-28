@@ -24,7 +24,7 @@ const LikesModal = ({ open, onClose }: LikesModalProps) => {
               </ListItem>
             ))}
           </List>
-          <Button onClick={onClose} variant="outlined" fullWidth sx={{ mt: 2 }}>
+          <Button onClick={onClose} variant="contained" fullWidth sx={{ mt: 2 }}>
             Закрыть
           </Button>
         </DialogContent>
