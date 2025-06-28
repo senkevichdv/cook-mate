@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react"
 import type { AppProps } from "next/app"
-import { ThemeProvider, createTheme } from "@mui/material/styles"
+import { ThemeProvider } from "@mui/material/styles"
 import Script from "next/script"
 import { CssBaseline } from "@mui/material"
-import { UserProvider } from "@/context/UserContext"
+import { UserInfo, UserProvider } from "@/context/UserContext"
+import { getMuiTheme } from "@/theme/createMuiTheme"
 
 declare global {
   interface Window {
@@ -13,11 +14,9 @@ declare global {
         themeParams?: Record<string, string>
         onEvent?: (event: string, handler: () => void) => void
         offEvent?: (event: string, handler: () => void) => void
-      }
-      WebAppUser?: {
-        id: string
-        first_name: string
-        username: string
+        initDataUnsafe?: {
+          user?: UserInfo
+        }
       }
     }
     TelegramGameProxy?: {
@@ -29,27 +28,8 @@ declare global {
   }
 }
 
-function getMuiTheme(mode: "light" | "dark", tgTheme?: Record<string, string>) {
-  return createTheme({
-    palette: {
-      mode,
-      primary: {
-        main:
-          tgTheme?.button_color || (mode === "dark" ? "#2AABEE" : "#0088cc"),
-      },
-      background: {
-        default: tgTheme?.bg_color || (mode === "dark" ? "#222" : "#fff"),
-        paper:
-          tgTheme?.secondary_bg_color || (mode === "dark" ? "#222" : "#fff"),
-      },
-      text: {
-        primary: tgTheme?.text_color || (mode === "dark" ? "#fff" : "#111"),
-      },
-    },
-  })
-}
-
 export default function MyApp({ Component, pageProps }: AppProps) {
+  const [user, setUser] = useState<UserInfo | null>(null)
   const [mode, setMode] = useState<"light" | "dark">(
     typeof window !== "undefined"
       ? window.Telegram?.WebApp?.colorScheme || "light"
@@ -73,29 +53,34 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <ThemeProvider theme={theme}>
-      <UserProvider>
-        <Script
-          id="TelegramWebApp"
-          src="https://telegram.org/js/telegram-web-app.js"
-          onReady={() => {
-            const tg = window.Telegram?.WebApp
-            if (tg && tg.onEvent) {
-              const handler = () => {
-                setMode(tg.colorScheme || "light")
-                setTgTheme(tg.themeParams)
-              }
-
-              tg.onEvent("themeChanged", handler)
+      <Script
+        id="TelegramWebApp"
+        src="https://telegram.org/js/telegram-web-app.js"
+        onReady={() => {
+          const tg = window.Telegram?.WebApp
+          if (tg && tg.onEvent) {
+            const handler = () => {
+              setMode(tg.colorScheme || "light")
+              setTgTheme(tg.themeParams)
             }
 
-            if (window.TelegramWebviewProxy?.postEvent) {
-              window.TelegramWebviewProxy.postEvent(
-                "web_app_setup_closing_behavior",
-                JSON.stringify({ need_confirmation: true })
-              )
-            }
-          }}
-        />
+            tg.onEvent("themeChanged", handler)
+          }
+
+          const tgUser = tg?.initDataUnsafe?.user
+          if (tgUser) {
+            setUser(tgUser)
+          }
+
+          if (window.TelegramWebviewProxy?.postEvent) {
+            window.TelegramWebviewProxy.postEvent(
+              "web_app_setup_closing_behavior",
+              JSON.stringify({ need_confirmation: true })
+            )
+          }
+        }}
+      />
+      <UserProvider user={user}>
         <CssBaseline />
         <Component {...pageProps} />
       </UserProvider>
