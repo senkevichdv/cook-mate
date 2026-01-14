@@ -20,19 +20,32 @@ const ResultsStep = ({ recipes, onBack }: ResultsStepProps) => {
     >
       <Box
         sx={{
-          p: 2,
+          p: 4,
           display: "flex",
           flexDirection: "column",
-          gap: 2,
+          gap: 3,
           alignItems: "center",
+          maxWidth: 900,
+          margin: '0 auto',
         }}
       >
-        <List sx={{ width: "100%", display: "flex", flexDirection: "column" }}>
-          <Typography sx={{ ml: 2 }} variant="h6">
-            Найденные рецепты
-          </Typography>
+        <Typography 
+          variant="h4" 
+          sx={{ 
+            fontWeight: 700, 
+            textAlign: 'center',
+            mb: 2,
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+          }}
+        >
+          Найденные рецепты 🍳
+        </Typography>
+        <List sx={{ width: "100%", display: "flex", flexDirection: "column", gap: 2 }}>
           {recipes.map((recipe, idx) => (
-            <ListItem key={idx} sx={{ width: "100%" }}>
+            <ListItem key={idx} sx={{ width: "100%", p: 0 }}>
               <RecipeComponent key={idx} recipe={recipe} idx={idx} />
             </ListItem>
           ))}
@@ -42,8 +55,9 @@ const ResultsStep = ({ recipes, onBack }: ResultsStepProps) => {
           variant="contained"
           color="primary"
           onClick={onBack}
+          sx={{ minWidth: 250, mt: 2 }}
         >
-          Назад к поиску
+          ← Назад к поиску
         </Button>
       </Box>
     </motion.div>

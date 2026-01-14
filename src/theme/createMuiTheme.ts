@@ -31,25 +31,91 @@ export function getMuiTheme(
       error,
     },
     shape: {
-      borderRadius: 12,
+      borderRadius: 16,
+    },
+    typography: {
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+      h4: {
+        fontWeight: 700,
+        letterSpacing: '-0.02em',
+      },
+      h6: {
+        fontWeight: 600,
+        letterSpacing: '-0.01em',
+      },
+      button: {
+        fontWeight: 600,
+        textTransform: 'none',
+        letterSpacing: '0.02em',
+      },
     },
     components: {
       MuiButton: {
         styleOverrides: {
           root: {
             height: 56,
+            borderRadius: 16,
+            boxShadow: 'none',
+            transition: 'all 0.3s ease',
+            '&:hover': {
+              boxShadow: `0 8px 24px ${colors.shadow}`,
+              transform: 'translateY(-2px)',
+            },
+          },
+          contained: {
+            background: colors.gradient || colors.accent,
+            '&:hover': {
+              background: colors.gradient || colors.accent,
+              opacity: 0.9,
+            },
           },
         },
       },
       MuiPaper: {
         styleOverrides: {
           root: {
-            boxShadow: `0 2px 8px ${colors.shadow}`,
-            border: `1px solid ${colors.border}`,
+            boxShadow: `0 4px 20px ${colors.shadow}`,
+            border: 'none',
+            borderRadius: 16,
           },
         },
       },
-      // Add more component overrides as needed
+      MuiAccordion: {
+        styleOverrides: {
+          root: {
+            borderRadius: '16px !important',
+            overflow: 'hidden',
+            '&:before': {
+              display: 'none',
+            },
+            marginBottom: 12,
+            boxShadow: `0 2px 12px ${colors.shadow}`,
+          },
+        },
+      },
+      MuiTextField: {
+        styleOverrides: {
+          root: {
+            '& .MuiOutlinedInput-root': {
+              borderRadius: 12,
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                boxShadow: `0 2px 8px ${colors.shadow}`,
+              },
+              '&.Mui-focused': {
+                boxShadow: `0 4px 12px ${colors.shadow}`,
+              },
+            },
+          },
+        },
+      },
+      MuiSelect: {
+        styleOverrides: {
+          root: {
+            borderRadius: 12,
+          },
+        },
+      },
     },
   })
 }

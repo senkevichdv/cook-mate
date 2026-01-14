@@ -57,24 +57,53 @@ const FormStep = ({ onSubmit }: FormStepProps) => {
       />
       <Box
         sx={{
-          p: 2,
+          p: 4,
           display: "flex",
           flexDirection: "column",
-          gap: 2,
+          gap: 3,
           alignItems: "center",
+          maxWidth: 600,
+          margin: '0 auto',
         }}
       >
-        <Image
-          width={250}
-          height={200}
-          alt="Telegram sticker"
-          src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExY21ubDMyc3B6cTU4cW1nZG00OG9zNXJ6eTYyM3Jwd3FxbHpiazltMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/rkgX9MTBXJa1O/giphy.gif"
-        />
-        <Typography variant="h6">
-          Привет, {user?.first_name || "друг"}!
+        <Box
+          sx={{
+            width: 250,
+            height: 200,
+            borderRadius: 4,
+            overflow: 'hidden',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
+          }}
+        >
+          <Image
+            width={250}
+            height={200}
+            alt="Telegram sticker"
+            src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExY21ubDMyc3B6cTU4cW1nZG00OG9zNXJ6eTYyM3Jwd3FxbHpiazltMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/rkgX9MTBXJa1O/giphy.gif"
+          />
+        </Box>
+        <Typography 
+          variant="h4" 
+          sx={{ 
+            fontWeight: 700, 
+            textAlign: 'center',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+          }}
+        >
+          Привет, {user?.first_name || "друг"}! 👋
         </Typography>
-        <Typography variant="body1">
-          Выбери параметры для поиска рецепта
+        <Typography 
+          variant="body1" 
+          sx={{ 
+            textAlign: 'center', 
+            color: 'text.secondary',
+            fontSize: '1.1rem',
+          }}
+        >
+          Найдём идеальный рецепт для вас
         </Typography>
         <FormControl fullWidth>
           <InputLabel id="filters-label">Фильтры</InputLabel>

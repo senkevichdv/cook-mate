@@ -19,24 +19,61 @@ const LoadingStep = () => (
   >
     <Box
       sx={{
-        p: 2,
+        p: 4,
         display: "flex",
         flexDirection: "column",
-        gap: 2,
+        gap: 3,
         alignItems: "center",
       }}
     >
-      <CircularProgress
-        size="large"
-        color="primary"
-        variant="indeterminate"
+      <Box
         sx={{
-          height: 50,
-          width: 50,
+          position: 'relative',
+          display: 'inline-flex',
         }}
-      />
-      <Typography style={{ marginTop: 16 }}>
-        Исследуем кулинарную книгу
+      >
+        <CircularProgress
+          size={80}
+          thickness={4}
+          color="primary"
+          variant="indeterminate"
+          sx={{
+            animationDuration: '1.5s',
+          }}
+        />
+        <Box
+          sx={{
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+            position: 'absolute',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Typography variant="h4">👨‍🍳</Typography>
+        </Box>
+      </Box>
+      <Typography 
+        variant="h6" 
+        sx={{ 
+          fontWeight: 600, 
+          textAlign: 'center',
+          mt: 2 
+        }}
+      >
+        Исследуем кулинарную книгу...
+      </Typography>
+      <Typography 
+        variant="body2" 
+        sx={{ 
+          color: 'text.secondary',
+          textAlign: 'center' 
+        }}
+      >
+        Подбираем лучшие рецепты для вас
       </Typography>
     </Box>
   </motion.div>
