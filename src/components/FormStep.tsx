@@ -67,6 +67,7 @@ const FormStep = ({ onSubmit }: FormStepProps) => {
         <Image
           width={250}
           height={200}
+          style={{borderRadius: 12, border: "1px solid #e0e0e0"}}
           alt="Telegram sticker"
           src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExY21ubDMyc3B6cTU4cW1nZG00OG9zNXJ6eTYyM3Jwd3FxbHpiazltMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/rkgX9MTBXJa1O/giphy.gif"
         />
