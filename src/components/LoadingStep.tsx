@@ -1,5 +1,5 @@
 import { motion } from "framer-motion"
-import { Box, CircularProgress, Typography } from "@mui/material"
+import { Box, Typography } from "@mui/material"
 
 const LoadingStep = () => (
   <motion.div
@@ -14,67 +14,74 @@ const LoadingStep = () => (
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
-      minHeight: 300,
+      minHeight: 400,
     }}
   >
     <Box
       sx={{
-        p: 4,
         display: "flex",
         flexDirection: "column",
-        gap: 3,
+        gap: 4,
         alignItems: "center",
       }}
     >
       <Box
         sx={{
           position: 'relative',
-          display: 'inline-flex',
+          width: 80,
+          height: 80,
         }}
       >
-        <CircularProgress
-          size={80}
-          thickness={4}
-          color="primary"
-          variant="indeterminate"
-          sx={{
-            animationDuration: '1.5s',
+        <motion.div
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.5, 1, 0.5],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          style={{
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            borderRadius: '50%',
+            background: 'linear-gradient(135deg, #171717 0%, #262626 100%)',
           }}
         />
         <Box
           sx={{
-            top: 0,
-            left: 0,
-            bottom: 0,
-            right: 0,
             position: 'absolute',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            fontSize: '2.5rem',
           }}
         >
-          <Typography variant="h4">👨‍🍳</Typography>
+          👨‍🍳
         </Box>
       </Box>
-      <Typography 
-        variant="h6" 
-        sx={{ 
-          fontWeight: 600, 
-          textAlign: 'center',
-          mt: 2 
-        }}
-      >
-        Исследуем кулинарную книгу...
-      </Typography>
-      <Typography 
-        variant="body2" 
-        sx={{ 
-          color: 'text.secondary',
-          textAlign: 'center' 
-        }}
-      >
-        Подбираем лучшие рецепты для вас
-      </Typography>
+      
+      <Box sx={{ textAlign: 'center' }}>
+        <Typography 
+          variant="h6" 
+          sx={{ 
+            fontWeight: 600,
+            mb: 1,
+          }}
+        >
+          Ищем рецепты...
+        </Typography>
+        <Typography 
+          variant="body2" 
+          sx={{ 
+            color: 'text.secondary',
+          }}
+        >
+          Это займёт всего пару секунд
+        </Typography>
+      </Box>
     </Box>
   </motion.div>
 )

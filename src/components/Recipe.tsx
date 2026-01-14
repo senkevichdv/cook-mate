@@ -149,7 +149,7 @@ const RecipeComponent = ({ recipe, idx }: RecipeComponentProps) => {
                   key={i}
                   sx={{ 
                     py: 1, 
-                    borderBottom: i < recipe.tips.length - 1 ? '1px solid' : 'none',
+                    borderBottom: i < recipe.tips!.length - 1 ? '1px solid' : 'none',
                     borderColor: 'divider'
                   }}
                 >
